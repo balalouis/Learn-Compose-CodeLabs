@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,8 +26,31 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(modifier: Modifier = Modifier, names: List<String> = listOf("World", "Compose")
-){
+fun OnBoardingScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit){
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Welcome to the Basics Codelab!")
+        ElevatedButton(onClick = onContinueClicked, Modifier.padding(12.dp)) {
+            Text(text = "Continue", color = MaterialTheme.colorScheme.secondary)
+        }
+    }
+}
+
+@Composable
+fun MyApp(modifier: Modifier = Modifier) {
+    var shouldShowOnBoarding by remember  { mutableStateOf(true) }
+    if(shouldShowOnBoarding){
+        OnBoardingScreen(onContinueClicked = { shouldShowOnBoarding = false})
+    }else{
+        Greetings()
+    }
+}
+
+@Composable
+fun Greetings(modifier: Modifier = Modifier,names: List<String> = listOf("World", "Compose")){
     Column(modifier = modifier.padding(vertical = 4.dp)) {
         for (name in names){
             Greeting(name = name)
@@ -44,7 +68,9 @@ fun Greeting(name: String) {
         val extraPadding = if (expanded.value) 48.dp else 0.dp
 
         Row(modifier = Modifier.padding(24.dp)) {
-            Column(modifier = Modifier.weight(1f).padding(bottom = extraPadding)) {
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(bottom = extraPadding)) {
                 Text(text = "Hello !")
                 Text(text = name)
             }
